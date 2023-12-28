@@ -79,4 +79,3 @@ while cur_date <= end_date:
 
     cur_date += timedelta(days=1)
 
-# pprint(response.content)
