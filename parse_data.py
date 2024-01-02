@@ -12,12 +12,11 @@ cookies = {
     'tmr_lvidTS': '1703082671793',
     'MPTrack': '2ea106bf.60cf33d6bd2d2',
     'MicexTrackID': '90f7fa46.60d061559ee07',
-    '_ga_9HDREVDWE7': 'GS1.1.1703416223.7.1.1703416225.58.0.0',
-    '_ga': 'GA1.2.41125269.1698584361',
-    '_gid': 'GA1.2.1773643554.1703416226',
-    '_gat_UA-27780661-1': '1',
     '_ym_isad': '2',
-    'MicexPassportCert': 'GfbDXnESx_xTDYQU3SCyogUAAADIAxm5MFyG_LDyGs6wAn_RwSjQhR-CCvl7tJyBz0D2_U1vCUN1LhmbnFhNT__fZk0rAJDsX3j1qHxJTm0h1ygOoXVAylqg73UOobXN6NZgrCBnL5vfltVwPekUv5R4Dtpu6-sgsMtPtNv23RDkrX5KGADQqkt4Hhp-r5brDudMWGmQf4W00',
+    '_gid': 'GA1.2.604424102.1704216737',
+    '_ga': 'GA1.1.41125269.1698584361',
+    '_ga_9HDREVDWE7': 'GS1.1.1704221073.13.1.1704221081.52.0.0',
+    'MicexPassportCert': 'wTPAAw6TTv6QRx01z38xYwIAAABY9zEbBbTi4zpFPcEiuiyT0ZyJMtJO2tmYCOWxUPwSbP5oVYJf9SYHaOAcoQ9LYg1WNIbIGnK7ETt_M5hSDmyLJAxEw8AOv6qI-VFe_sYaDeFRxwPbgH4iYFo67xLZPLdF5Sa8xSuWQlCx2oGiWuhGJeOn3SZZcSy13mVS6bG_m6oQqYO60',
 }
 
 headers = {
@@ -25,24 +24,27 @@ headers = {
     'Accept-Language': 'ru,en;q=0.9,hu;q=0.8,es;q=0.7',
     'Cache-Control': 'no-cache',
     'Connection': 'keep-alive',
-    # 'Cookie': '_ym_uid=1682513184127487068; _ym_d=1698584361; _ga_1RFNGQ1758=GS1.1.1702731461.9.0.1702731479.42.0.0; tmr_lvid=7a3ea67c015dc781a31a735757421fc3; tmr_lvidTS=1703082671793; MPTrack=2ea106bf.60cf33d6bd2d2; MicexTrackID=90f7fa46.60d061559ee07; _ga_9HDREVDWE7=GS1.1.1703416223.7.1.1703416225.58.0.0; _ga=GA1.2.41125269.1698584361; _gid=GA1.2.1773643554.1703416226; _gat_UA-27780661-1=1; _ym_isad=2; MicexPassportCert=GfbDXnESx_xTDYQU3SCyogUAAADIAxm5MFyG_LDyGs6wAn_RwSjQhR-CCvl7tJyBz0D2_U1vCUN1LhmbnFhNT__fZk0rAJDsX3j1qHxJTm0h1ygOoXVAylqg73UOobXN6NZgrCBnL5vfltVwPekUv5R4Dtpu6-sgsMtPtNv23RDkrX5KGADQqkt4Hhp-r5brDudMWGmQf4W00',
+    # 'Cookie': '_ym_uid=1682513184127487068; _ym_d=1698584361; _ga_1RFNGQ1758=GS1.1.1702731461.9.0.1702731479.42.0.0; tmr_lvid=7a3ea67c015dc781a31a735757421fc3; tmr_lvidTS=1703082671793; MPTrack=2ea106bf.60cf33d6bd2d2; MicexTrackID=90f7fa46.60d061559ee07; _ym_isad=2; _gid=GA1.2.604424102.1704216737; _ga=GA1.1.41125269.1698584361; _ga_9HDREVDWE7=GS1.1.1704221073.13.1.1704221081.52.0.0; MicexPassportCert=wTPAAw6TTv6QRx01z38xYwIAAABY9zEbBbTi4zpFPcEiuiyT0ZyJMtJO2tmYCOWxUPwSbP5oVYJf9SYHaOAcoQ9LYg1WNIbIGnK7ETt_M5hSDmyLJAxEw8AOv6qI-VFe_sYaDeFRxwPbgH4iYFo67xLZPLdF5Sa8xSuWQlCx2oGiWuhGJeOn3SZZcSy13mVS6bG_m6oQqYO60',
     'Origin': 'https://www.moex.com',
     'Pragma': 'no-cache',
     'Referer': 'https://www.moex.com/',
     'Sec-Fetch-Dest': 'empty',
     'Sec-Fetch-Mode': 'cors',
     'Sec-Fetch-Site': 'same-site',
-    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.732 YaBrowser/23.11.1.732 Yowser/2.5 Safari/537.36',
+    'sec-ch-ua': '"Chromium";v="118", "YaBrowser";v="23", "Not=A?Brand";v="99"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
 }
 
 params = [
     ('iss.meta', 'off'),
     ('iss.json', 'extended'),
     ('start', '0'),
-    ('limit', '100000'),
+    ('limit', '100'),
     ('lang', 'ru'),
-    # ('date', '2023-05-22'),
-    ('nocache-guid', '25732139-cb65-4fb9-a82b-097c55e9747e'),
+    # ('date', '2013-11-07'),
+    ('nocache-guid', 'f4cdd449-17ea-4bb9-9d68-a95abc1bf3ed'),
     ('iss.meta', 'off'),
     ('iss.json', 'extended'),
     ('callback', 'JSON_CALLBACK'),
@@ -76,6 +78,7 @@ while cur_date <= end_date:
     if cur_date.weekday() < 5:
         response = get_response(cur_date)
         data = eval(response.content[15:-1:]) # get data from json callback 
+        print(data)
         df = pd.DataFrame(data[1]["analytics"])
         file_name = f"data_{cur_date.date()}.csv"
 

@@ -1,8 +1,10 @@
 import pandas as pd
 import openpyxl
+import os
 
 
-weights_file_path = 'Data\index_daily_data\weights.xlsx'
+weights_file_path = 'Data\index_data\weights.xlsx'
+daily_data_folder_path = 'Data\index_data\daily_data'
 
 
 def get_valid_sheet(file_path):
@@ -27,9 +29,19 @@ def get_valid_sheet(file_path):
 
     return sheets[:last_valid_sheet_index]
 
+def get_dateframe(folder_path):
+    files = os.listdir(folder_path)
+    for file in files:
+        path =  os.path.join(folder_path, file)
+        cur_df = pd.read_csv(path)
+        print(path)
+        print(cur_df)
+
+
 
 sheets = get_valid_sheet(weights_file_path)
+get_dateframe(daily_data_folder_path)
 
-for sheet in sheets:
-    weights = pd.read_excel(weights_file_path, sheet_name=sheet, skiprows=3)
-    print(weights.columns)
+
+
+
