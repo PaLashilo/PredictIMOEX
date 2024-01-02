@@ -1,5 +1,5 @@
 months_to_predict: 12
 
-p: 3
+p: 1
 d: 2
 q: 3
