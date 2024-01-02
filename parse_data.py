@@ -2,6 +2,7 @@ import requests
 from datetime import datetime, timedelta
 from pprint import pprint
 import pandas as pd
+import os
 
 cookies = {
     '_ym_uid': '1682513184127487068',
@@ -51,6 +52,9 @@ params = [
 cur_date = datetime(2013, 9, 2)
 end_date = datetime.today() - timedelta(days=2)
 
+data_files = os.listdir("Data/index_data/daily_data")
+
+
 def get_response(date):
     params.append(('date', date.strftime("%Y-%m-%d")))
     response = requests.get(
@@ -61,6 +65,9 @@ def get_response(date):
     )
     return response
 
+def check_data_existance(file_name):
+    return file_name in data_files
+
 
 while cur_date <= end_date:
 
@@ -70,9 +77,15 @@ while cur_date <= end_date:
         response = get_response(cur_date)
         data = eval(response.content[15:-1:]) # get data from json callback 
         df = pd.DataFrame(data[1]["analytics"])
-        df.to_csv(f'Data/daily_data/data_{cur_date.date()}.csv', index=False)
+        file_name = f"data_{cur_date.date()}.csv"
 
-        print(response.status_code) 
+        if not check_data_existance(file_name):
+            df.to_csv(f'Data/index_data/daily_data/{file_name}', index=False)
+
+            print(response.status_code) 
+        
+        else:
+            print("EXISTS")
 
     else: 
         print("NO DATA") 
