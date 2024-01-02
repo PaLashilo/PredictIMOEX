@@ -1,6 +1,7 @@
 import pandas as pd
 import openpyxl
 
+
 weights_file_path = 'Data\index_daily_data\weights.xlsx'
 
 
