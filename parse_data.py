@@ -78,17 +78,20 @@ while cur_date <= end_date:
     if cur_date.weekday() < 5:
         response = get_response(cur_date)
         data = eval(response.content[15:-1:]) # get data from json callback 
-        print(data)
-        df = pd.DataFrame(data[1]["analytics"])
-        file_name = f"data_{cur_date.date()}.csv"
-
-        if not check_data_existance(file_name):
-            df.to_csv(f'Data/index_data/daily_data/{file_name}', index=False)
-
-            print(response.status_code) 
         
+        df = pd.DataFrame(data[1]["analytics"])
+        if len(df) > 0:
+            file_name = f"data_{cur_date.date()}.csv"
+
+            if not check_data_existance(file_name):
+                df.to_csv(f'Data/index_data/daily_data/{file_name}', index=False)
+
+                print(response.status_code) 
+            
+            else:
+                print("EXISTS")
         else:
-            print("EXISTS")
+            print("EMPTY RESPONSE")
 
     else: 
         print("NO DATA") 
