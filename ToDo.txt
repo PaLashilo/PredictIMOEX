@@ -1,3 +1,12 @@
 Try catboost to forecast
 Reparse data
+Read df in index_calculations.py
+
+
+
+
+
+
+
+Check that json response not empty 
 
