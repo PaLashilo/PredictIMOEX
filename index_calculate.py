@@ -1,5 +1,5 @@
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import openpyxl
 import os
 
@@ -43,26 +43,33 @@ def get_period_borders_from_sheets(sheets):
 # form a dataframe with needed stock's price data
 def get_dateframe(folder_path, start, end):
     files = os.listdir(folder_path)
-    for file in files:
-        path =  os.path.join(folder_path, file)
-        cur_df = pd.read_csv(path)
-        cur_df.waprice
-        print(path)
-        print(cur_df)
+    file_pattern = "data_{:04d}-{:02d}-{:02d}.csv"
+    cur_date = start
+    df = pd.DataFrame()
+
+    while cur_date <= end:
+        data_path = file_pattern.format(cur_date.year, cur_date.month, cur_date.day)
+
+        if data_path in files:
+            data = pd.read_csv(data_path).waprice
+
+        cur_date += timedelta(days=1)
+
+    return df
 
 
 
 sheets = get_valid_sheet(weights_file_path) 
 period_borders = get_period_borders_from_sheets(sheets)
 
-print(period_borders)
-
+df = get_dateframe(daily_data_folder_path, period_borders[0], period_borders[1])
+print(df)
 
 # check every period
-for i in range (len(period_borders)-1):
-    start_date = period_borders[i]
-    end_date = period_borders[i+1]
-    df = get_dateframe(daily_data_folder_path, start_date, end_date)
+# for i in range (len(period_borders)-1):
+#     start_date = period_borders[i]
+#     end_date = period_borders[i+1]
+#     df = get_dateframe(daily_data_folder_path, start_date, end_date)
 
 
 
