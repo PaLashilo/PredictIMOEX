@@ -10,6 +10,7 @@ with warnings.catch_warnings():
 
 weights_file_path = 'Data\index_data\weights.xlsx'
 daily_data_folder_path = 'Data\index_data\daily_data'
+security_file_path = "Data\index_archieve\security.csv"
 
 
 # get sheets with relevant wights
@@ -46,8 +47,8 @@ def get_period_borders_from_sheets(sheets):
     return dates
 
 
-# form a dataframe with needed stock's price data
-def get_dateframe(start, end):
+# form a dataframe all period stocks
+def get_dataframe(start, end):
 
     files = os.listdir(daily_data_folder_path)
     file_pattern = "data_{:04d}-{:02d}-{:02d}.csv" #pattern for filenames
@@ -83,21 +84,62 @@ def get_dateframe(start, end):
     return df
 
 
+# calculating stocks capitalisation for date stocks
+def get_date_MC(date):
+
+    files = os.listdir(daily_data_folder_path)
+    file_pattern = "data_{:04d}-{:02d}-{:02d}.csv" #pattern for filenames
+
+    file_path = file_pattern.format(date.year, date.month, date.day)
+    data_path = os.path.join(daily_data_folder_path, file_path)
+
+    if file_path in files:
+
+        stock_data = pd.read_csv(data_path, usecols=["waprice", "ticker"])
+
+        weights_data = get_weights(date)
+
+        df_merged = pd.merge(stock_data, weights_data, left_on='ticker', right_on='Code', how='left') # left join (left - archieve data)
+
+        df_merged = df_merged.rename(columns={'waprice': 'P',
+                                    'Number of issued shares': 'Q',
+                                    'Free-float factor': 'FF',
+                                    'Restricting coefficient (new)': 'RC',
+                                    'Weight new': 'W'})
+
+        df_merged["res"] =  df_merged["P"] * df_merged["Q"] * df_merged["FF"] * df_merged["W"] 
+
+        print(df_merged)
+
+        return df_merged["res"].sum() # MC for one date 
+
+
 # form index weights for needed period
 def get_weights(date):
 
-    weights = pd.read_excel(weights_file_path, sheet_name=date, skiprows=3, usecols=['Code', 'Weight new', 'Free-float factor', 'Restricting coefficient (new)'])
+    date_str = date.strftime("%d.%m.%Y")
+
+    weights = pd.read_excel(weights_file_path, sheet_name=date_str, skiprows=3, usecols=['Code', 'Number of issued shares', 'Weight new', 'Free-float factor', 'Restricting coefficient (new)'])
     weights = weights.set_index('Code')
 
     return weights[:"YNDX"]
+
+
+# getting Divisor
+def get_date_D(date):
+    data = pd.read_csv(security_file_path, skiprows=2, sep=";", encoding='latin-1', usecols=['DIVISOR', 'TRADEDATE'])
+    date_str = date.strftime("%d.%m.%Y")
+    divisor = data.loc[data['TRADEDATE'] == date_str, 'DIVISOR'].values[0]
+    return divisor
 
 
 
 sheets = get_valid_sheet() 
 period_borders = get_period_borders_from_sheets(sheets)
 
-df = get_dateframe(period_borders[0], period_borders[1])
-weights = get_weights(sheets[0])
+# df = get_dataframe(period_borders[0], period_borders[1])
+df = get_date_D(period_borders[0])
+print(df)
 
 
 
@@ -105,7 +147,7 @@ weights = get_weights(sheets[0])
 # for i in range (len(period_borders)-1):
 #     start_date = period_borders[i]
 #     end_date = period_borders[i+1]
-#     df = get_dateframe(daily_data_folder_path, start_date, end_date)
+#     df = get_dataframe(daily_data_folder_path, start_date, end_date)
 
 
 
