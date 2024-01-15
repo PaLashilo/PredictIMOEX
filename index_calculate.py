@@ -2,6 +2,10 @@ import pandas as pd
 from datetime import datetime, timedelta
 import openpyxl
 import os
+import warnings
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore")
 
 
 weights_file_path = 'Data\index_data\weights.xlsx'
@@ -9,10 +13,10 @@ daily_data_folder_path = 'Data\index_data\daily_data'
 
 
 # get sheets with relevant wights
-def get_valid_sheet(file_path):
+def get_valid_sheet():
 
     # get all sheets
-    workbook = openpyxl.load_workbook(file_path)
+    workbook = openpyxl.load_workbook(weights_file_path)
     sheets = workbook.sheetnames
     sheets.remove('help')
 
@@ -43,9 +47,9 @@ def get_period_borders_from_sheets(sheets):
 
 
 # form a dataframe with needed stock's price data
-def get_dateframe(folder_path, start, end):
+def get_dateframe(start, end):
 
-    files = os.listdir(folder_path)
+    files = os.listdir(daily_data_folder_path)
     file_pattern = "data_{:04d}-{:02d}-{:02d}.csv" #pattern for filenames
     cur_date = start
     first_fill = True # for dataframe initing
@@ -54,7 +58,7 @@ def get_dateframe(folder_path, start, end):
     while cur_date <= end:
 
         file_path = file_pattern.format(cur_date.year, cur_date.month, cur_date.day)
-        data_path = os.path.join(folder_path, file_path)
+        data_path = os.path.join(daily_data_folder_path, file_path)
 
         # get data if file exists
         if file_path in files:
@@ -70,8 +74,8 @@ def get_dateframe(folder_path, start, end):
                 df = pd.DataFrame(columns=["date"]+data.secids.tolist())
                 first_fill = False  
 
-            # add row
-            df = pd.concat([df, pd.DataFrame(row_to_add, index=[0])]) # add new row    
+            # add new row
+            df = pd.concat([df, pd.DataFrame(row_to_add, index=[0])]) 
 
         cur_date += timedelta(days=1)
 
@@ -79,12 +83,23 @@ def get_dateframe(folder_path, start, end):
     return df
 
 
+# form index weights for needed period
+def get_weights(date):
 
-sheets = get_valid_sheet(weights_file_path) 
+    weights = pd.read_excel(weights_file_path, sheet_name=date, skiprows=3, usecols=['Code', 'Weight new', 'Free-float factor', 'Restricting coefficient (new)'])
+    weights = weights.set_index('Code')
+
+    return weights[:"YNDX"]
+
+
+
+sheets = get_valid_sheet() 
 period_borders = get_period_borders_from_sheets(sheets)
 
-df = get_dateframe(daily_data_folder_path, period_borders[0], period_borders[1])
-print(df.index)
+df = get_dateframe(period_borders[0], period_borders[1])
+weights = get_weights(sheets[0])
+
+
 
 # check every period
 # for i in range (len(period_borders)-1):
