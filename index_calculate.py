@@ -85,7 +85,7 @@ def get_dataframe(start, end):
 
 
 # calculating stocks capitalisation for date stocks
-def get_date_MC(date):
+def get_date_MC(date, start):
 
     files = os.listdir(daily_data_folder_path)
     file_pattern = "data_{:04d}-{:02d}-{:02d}.csv" #pattern for filenames
@@ -97,7 +97,7 @@ def get_date_MC(date):
 
         stock_data = pd.read_csv(data_path, usecols=["waprice", "ticker"])
 
-        weights_data = get_weights(date)
+        weights_data = get_weights(start)
 
         df_merged = pd.merge(stock_data, weights_data, left_on='ticker', right_on='Code', how='left') # left join (left - archieve data)
 
@@ -108,8 +108,7 @@ def get_date_MC(date):
                                     'Weight new': 'W'})
 
         df_merged["res"] =  df_merged["P"] * df_merged["Q"] * df_merged["FF"] * df_merged["W"] 
-
-        print(df_merged)
+        df_merged.to_csv(f'index_results\index_archieve\{date}.csv')
 
         return df_merged["res"].sum() # MC for one date 
 
@@ -137,11 +136,43 @@ def get_date_D(date):
 sheets = get_valid_sheet() 
 period_borders = get_period_borders_from_sheets(sheets)
 
-# df = get_dataframe(period_borders[0], period_borders[1])
-df = get_date_D(period_borders[0])
+
+
+df = pd.DataFrame(columns=['Date', 'MC', 'D', 'NewClose'])
+
+for i in range (len(period_borders)-1):
+
+    start_date = period_borders[i]
+    cur_date = period_borders[i]
+    end_date = period_borders[i+1]
+
+    if start_date != datetime.strptime("2023-12-21", "%Y-%m-%d"):
+        divisor = 1771049604.4106
+    else:
+        divisor = get_date_D(start_date)
+
+    while cur_date < end_date:
+        print(cur_date)
+        MC = get_date_MC(cur_date, start_date)
+        print("D: ", divisor, "  MC: ", MC)
+        if MC:
+            row = {'Date': cur_date, 'MC': MC, 'D': divisor, 'NewClose': MC/divisor}
+            df.loc[len(df.index)] = [cur_date, MC, divisor, MC/divisor]
+        cur_date += timedelta(days=1)
+
+
+old_data = pd.read_csv(security_file_path, skiprows=2, sep=";", encoding='latin-1', usecols=['TRADEDATE', 'CLOSE'])
+
+df['Date'] = pd.to_datetime(df['Date'], format="%d.%m.%Y")
+old_data['TRADEDATE'] = pd.to_datetime(old_data['TRADEDATE'], format="%d.%m.%Y")
+df['Date'] = pd.to_datetime(df['Date'], format="%m.%d.%Y")
+old_data['TRADEDATE'] = pd.to_datetime(old_data['TRADEDATE'], format="%m.%d.%Y")
+
+df = pd.merge(df, old_data, left_on='Date', right_on='TRADEDATE', how='left')
+
+df.drop("TRADEDATE", axis=1).to_csv('index_results\index_calculation.csv')
+
 print(df)
-
-
 
 # check every period
 # for i in range (len(period_borders)-1):
