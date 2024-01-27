@@ -105,7 +105,7 @@ def get_date_MC(date, start):
                                     'Number of issued shares': 'Q',
                                     'Free-float factor': 'FF',
                                     'Restricting coefficient (new)': 'RC',
-                                    'Weight new': 'W'})
+                                    'Share weight in index': 'W'})
 
         df_merged["res"] =  df_merged["P"] * df_merged["Q"] * df_merged["FF"] * df_merged["W"] 
         df_merged.to_csv(f'index_results\index_archieve\{date}.csv')
@@ -118,7 +118,7 @@ def get_weights(date):
 
     date_str = date.strftime("%d.%m.%Y")
 
-    weights = pd.read_excel(weights_file_path, sheet_name=date_str, skiprows=3, usecols=['Code', 'Number of issued shares', 'Weight new', 'Free-float factor', 'Restricting coefficient (new)'])
+    weights = pd.read_excel(weights_file_path, sheet_name=date_str, skiprows=3, usecols=['Code', 'Number of issued shares', 'Share weight in index', 'Free-float factor', 'Restricting coefficient (new)'])
     weights = weights.set_index('Code')
 
     return weights[:"YNDX"]
@@ -146,7 +146,7 @@ for i in range (len(period_borders)-1):
     cur_date = period_borders[i]
     end_date = period_borders[i+1]
 
-    if start_date != datetime.strptime("2023-12-21", "%Y-%m-%d"):
+    if start_date == datetime.strptime("2023-12-21", "%Y-%m-%d"):
         divisor = 1771049604.4106
     else:
         divisor = get_date_D(start_date)
@@ -174,11 +174,6 @@ df.drop("TRADEDATE", axis=1).to_csv('index_results\index_calculation.csv')
 
 print(df)
 
-# check every period
-# for i in range (len(period_borders)-1):
-#     start_date = period_borders[i]
-#     end_date = period_borders[i+1]
-#     df = get_dataframe(daily_data_folder_path, start_date, end_date)
 
 
 
